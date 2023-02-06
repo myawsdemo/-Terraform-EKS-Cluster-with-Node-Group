@@ -9,12 +9,12 @@ variable "networking" {
     nat_gateways    = bool
   })
   default = {
-    cidr_block      = "141.0.0.0/16"
-    region          = "eu-central-1"
+    cidr_block      = "10.0.0.0/16"
+    region          = "ap-northeast-1"
     vpc_name        = "terraform-vpc"
-    azs             = ["eu-central-1a", "eu-central-1b"]
-    public_subnets  = ["141.0.1.0/24", "141.0.2.0/24"]
-    private_subnets = ["141.0.3.0/24", "141.0.4.0/24"]
+    azs             = ["ap-northeast-1a", "ap-northeast-1c"]
+    public_subnets  = ["10.0.1.0/24", "10.0.2.0/24"]
+    private_subnets = ["10.0.3.0/24", "10.0.4.0/24"]
     nat_gateways    = true
   }
 }
@@ -41,7 +41,7 @@ variable "security_groups" {
     }))
   }))
   default = [{
-    name        = "custom-security-group"
+    name        = "https-http-sg"
     description = "Inbound & Outbound traffic for custom-security-group"
     ingress = [
       {
@@ -80,8 +80,8 @@ variable "cluster_config" {
     version = string
   })
   default = {
-    name    = "eks-cluster"
-    version = "1.22"
+    name    = "terraform-cluster"
+    version = "1.24"
   }
 }
 
@@ -103,8 +103,8 @@ variable "node_groups" {
   }))
   default = [
     {
-      name           = "t3-micro-standard"
-      instance_types = ["t3.micro"]
+      name           = "m6i-large-standard"
+      instance_types = ["m6i.large"]
       ami_type       = "AL2_x86_64"
       capacity_type  = "ON_DEMAND"
       disk_size      = 20
@@ -118,11 +118,11 @@ variable "node_groups" {
       }
     },
     {
-      name           = "t3-micro-spot"
-      instance_types = ["t3.micro"]
+      name           = "m6i-large-spot"
+      instance_types = ["m6i.large"]
       ami_type       = "AL2_x86_64"
       capacity_type  = "SPOT"
-      disk_size      = 20
+      disk_size      = 512
       scaling_config = {
         desired_size = 2
         max_size     = 3
@@ -144,19 +144,19 @@ variable "addons" {
   default = [
     {
       name    = "kube-proxy"
-      version = "v1.22.6-eksbuild.1"
+      version = "v1.24.9-eksbuild.1"
     },
     {
       name    = "vpc-cni"
-      version = "v1.11.0-eksbuild.1"
+      version = "v1.12.1-eksbuild.2"
     },
     {
       name    = "coredns"
-      version = "v1.8.7-eksbuild.1"
+      version = "v1.8.7-eksbuild.3"
     },
     {
       name    = "aws-ebs-csi-driver"
-      version = "v1.6.2-eksbuild.0"
+      version = "v1.15.0-eksbuild.1"
     }
   ]
 }
